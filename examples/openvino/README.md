@@ -64,3 +64,23 @@ Converted vs stock, chained state throughout. In onnxruntime the converted model
 ## Caveats
 
 Each converted model is single sample rate (the `sr` input is removed) with batch fixed to 1. Some of the inlined guards may be batch dependent, so batch 1 is validated exhaustively and larger batches are not. IR files are version sensitive: regenerate the IR with your target OpenVINO version, or load the cleaned ONNX directly with `read_model`.
+
+## FAQ
+
+You may find these answers useful.
+
+> The OpenVINO model has to be generated separately for each major version?
+
+No. The only version sensitive artifact is the IR (the xml plus bin pair). The cleaned ONNX that convert.py produces is a plain ONNX file and OpenVINO loads it directly with read_model, so it works across OV versions the same way the stock model works across onnxruntime versions. That's why the PR ships the conversion script instead of binaries: anyone can regenerate the cleaned ONNX from the model already in this repo in a few seconds. If you prefer to publish a converted artifact in the repo, I can add the cleaned ONNX as well. That should not require frequent updates. For IR files, I would recommend generating them locally with the target OpenVINO version, since that avoids version-compatibility edge cases.
+
+> Is the OpenVINO model backwards of forwards compatible?
+
+The IR is forward compatible but not backward compatible. An IR generated with an older OpenVINO keeps loading on newer runtimes (the IR format has been stable since 2022.1), but an IR generated with a newer OpenVINO can fail on older runtimes. I hit exactly that while testing this: an IR saved with 2026.2 contained opset16::Identity, which an older CPU plugin could parse but not execute. That's the reason convert.py folds Identity nodes out of the graph, and why the README says to regenerate the IR locally or just load the ONNX.
+
+> Does it depend on CPU model?
+
+The files don't, they are hardware agnostic and compilation for the target happens at load time. The one CPU dependent behavior is the default inference precision: on bf16 capable CPUs (AMX or AVX512 BF16, mostly server Xeons) the CPU plugin silently defaults to bf16, and for this model the error compounds through the recurrent state until the segmentation changes. With INFERENCE_PRECISION_HINT set to f32 as the README says, results match onnxruntime to about 1e-6 on every CPU I tested.
+
+> It works only with Intel CPUs?
+
+Not only. The CPU plugin dispatches on instruction set features rather than vendor, so it runs on AMD x86-64 as well (Intel is what gets validated and tuned), and ARM64 is officially supported too, Apple Silicon included. The Intel exclusive parts are the accelerator plugins (integrated GPU and NPU), which this example doesn't touch.
