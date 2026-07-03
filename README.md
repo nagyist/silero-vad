@@ -180,3 +180,5 @@ Please see our [wiki](https://github.com/snakers4/silero-models/wiki) for releva
 - [Rust](https://github.com/snakers4/silero-vad/tree/master/examples/rust-example), [Rust (wavekat-vad)](https://github.com/snakers4/silero-vad/tree/master/examples/rust-wav-processing-with-wavekat-vad), [Go](https://github.com/snakers4/silero-vad/tree/master/examples/go), [Java](https://github.com/snakers4/silero-vad/tree/master/examples/java-example), [C++](https://github.com/snakers4/silero-vad/tree/master/examples/cpp), [C#](https://github.com/snakers4/silero-vad/tree/master/examples/csharp) and [other](https://github.com/snakers4/silero-vad/tree/master/examples) community examples
 
 - OpenVINO conversion [guidelines](https://github.com/snakers4/silero-vad/tree/master/examples/openvino)
+
+- A tinygrad [model](https://github.com/snakers4/silero-vad/blob/master/src/silero_vad/tinygrad_model.py) with a pico example in the docsting + separate [weights](https://github.com/snakers4/silero-vad/blob/master/src/silero_vad/data/silero_vad_16k.safetensors) in safetensors format (for simplicity we provided just the 16k model)
