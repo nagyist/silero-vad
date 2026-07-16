@@ -181,4 +181,6 @@ Please see our [wiki](https://github.com/snakers4/silero-models/wiki) for releva
 
 - OpenVINO conversion [guidelines](https://github.com/snakers4/silero-vad/tree/master/examples/openvino)
 
+- Optional [offline ONNX sequence inference](examples/onnx_sequence) for long recordings
+
 - A tinygrad [model](https://github.com/snakers4/silero-vad/blob/master/src/silero_vad/tinygrad_model.py) with a pico example in the docsting + separate [weights](https://github.com/snakers4/silero-vad/blob/master/src/silero_vad/data/silero_vad_16k.safetensors) in safetensors format (for simplicity we provided just the 16k model)
